@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Dodaj film lub serial</h1>
+<form action="/add_video/" method="POST" class="form-group">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="name" class="bmd-label-floating">Tytuł</label>
+        <input type="text" class="form-control" id="name" name="name" required minlength="1" maxlength="46">
+    </div>
+    <div class="form-group">
+        <label for="description" class="bmd-label-floating">Opis</label>
+        <textarea type="text" class="form-control" id="description" name="description" required minlength="20" maxlength="800"></textarea>
+        <small id="descriptionHelp" class="form-text text-muted">Najlepiej skopiować opis z innej strony.</small>
+    </div>
+    <div class="form-group">
+        <label for="image" class="bmd-label-floating">Zdjęcie</label>
+        <input type="url" class="form-control" id="image" name="image" required>
+        <small id="imageHelp" class="form-text text-muted">Link do zdjęcia. Aby zdobyć link należy kliknąć prawym na zdjęcie po czym "Kopiuj adres obrazu" i można wkleić.</small>
+    </div>
+    <div class="form-group">
+        <label for="type" class="bmd-label-floating">Typ</label>
+        <select class="form-control" id="type" name="type" required>
+            <option value="series">Serial</option>
+            <option value="movie">Film</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="categoryDate" class="bmd-label-floating">Rok produkcji</label>
+        <select class="form-control" id="categoryDate" name="date" required>
+          {% for date in dates %}
+              <option {% if date.name == "2020" %}selected{% endif %}>{{ date.name }}</option>
+          {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="categoryCategories" class="bmd-label-floating">Kategorie</label>
+        <select multiple class="form-control" id="categoryCategories" name="categories" required>
+          {% for category in categories %}
+              <option value="{{ category.name }}">{{ category.name }}</option>
+          {% endfor %}
+        </select>
+        <small id="categoriesHelp" class="form-text text-muted">Aby zaznaczyć klika kategorii przytrzymaj CTRL i klikaj myszką na kategorie.</small>
+    </div>
+    {% include 'recaptcha.html' %}
+    <button type="submit" class="btn btn-success btn-raised">Dodaj</button>
+</form>
+{% endblock %}

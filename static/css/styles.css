@@ -1,0 +1,59 @@
+.video-image {
+    max-width: 140px;
+    max-height: 200px;
+}
+.content {
+    display: flex;
+    justify-content: center;
+    flex-flow: row;
+}
+.sidebar {
+    display: flex;
+    flex-flow: column;
+    align-self: flex-start;
+}
+.main {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-self: center;
+}
+.card {
+    margin: 17px;
+}
+.sidebar {
+    max-width: 300px;
+    width: 100%;
+}
+.video-content {
+    max-width: 900px;
+}
+tr:hover {
+    cursor: pointer;
+}
+@media (max-width: 800px) {
+    .content {
+        flex-direction: column;
+    }
+    .sidebar {
+        align-self: center;
+    }
+    .main {
+        width: 100% !important;
+    }
+    .video {
+        flex-flow: wrap;
+        justify-content: center;
+        text-align: center;
+    }
+}
+.seasons {
+    display: flex;
+    flex-flow: wrap;
+}
+li {
+    list-style: none;
+}
+.season {
+    flex: 1 1 50%;
+}

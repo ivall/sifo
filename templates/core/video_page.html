@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<img src="{{ video.image }}" class="video-image">
+<h5>{{ video.name }}</h5>
+<div class="videos">
+    <div class="video-description">
+        {{ video.description }}
+    </div>
+    {% if video.type != 'Series' or episode_view %}
+    <div class="links">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Serwis</th>
+              <th scope="col">Język</th>
+              <th scope="col">Jakość</th>
+            </tr>
+          </thead>
+          <tbody>
+          {% for link in links %}
+            <tr onclick="window.location='{{ link.url }}';">
+              <td>{{ link.service }}</td>
+              <td>{{ link.language.name }}</td>
+              <td>{{ link.quality }}</td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#addLinkModal">Dodaj link</button>
+    </div>
+    {% else %}
+    <div class="seasons mt-4">
+        {% for season in seasons %}
+            <ul class="season">
+                <b>Sezon {{ season }}</b><br/>
+                {% for episode in episodes %}
+                    {% if episode.season == season %}
+                        odc. {{ episode.episode }} <a href="?season={{ season }}&episode={{ episode.episode }}">{{ episode.title }}</a><br/>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if request.session.account_type == 'admin' and video.type == 'Series' %}
+    <form action="/actualize_series/" method="POST" class="form-group mt-4 card card-body">
+        {% csrf_token %}
+        Zaaktualizuj sezony i odcinki
+        <div class="form-group">
+            <input type="hidden" class="form-control" id="video_id" name="video_id" value="{{ video.id }}">
+            <label for="episodate_link" class="bmd-label-floating">Link eposidate</label>
+            <input type="url" class="form-control" id="episodate_link" name="episodate_link" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Zaaktualizuj</button>
+    </form>
+    {% endif %}
+</div>
+{% include 'core/add_link_modal.html' %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<div class="sidebar">
+    <div class="card card-body">
+        <div class="categories">
+            <h5>Kategorie</h5>
+            {% for category in categories.all %}
+                <a href="/category/{{ category.name }}" class="badge badge-primary">{{ category.name }}</a>
+            {% endfor %}
+        </div>
+        <div class="date mt-3">
+            <h5>Rok produkcji</h5>
+            {% for date in dates.all %}
+                <a href="/category/{{ date.name }}" class="badge badge-primary">{{ date.name }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<h5>sifo - seriale i filmy online</h5>
+<h6>
+    {% if not title %}
+    ostatnie dodane
+    {% else %}
+    wyniki wyszukiwania dla <i>{{ title }}</i>
+    {% endif %}
+</h6>
+<div class="videos">
+    {% for video in page.object_list %}
+        {% include 'core/video.html' %}
+    {% endfor %}
+    {% if not videos %}
+        <div class="video d-flex card card-body flex-row mt-3">Nie znaleziono filmu lub serialu, którego szukasz :(</div>
+    {% endif %}
+
+    <nav aria-label="...">
+      <ul class="pagination justify-content-center">
+        {% if page.has_previous %}
+            <li class="page-item">
+                <a href="?page={{ page.previous_page_number }}" class="page-link">poprzednia</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a href="#" class="page-link">poprzednia</a>
+            </li>
+        {% endif %}
+        {% for num in page.paginator.page_range %}
+            {% if page.number == num %}
+                <li class="page-item active"><a class="page-link" href="#">{{ num }} <span class="sr-only">(current)</span></a></li>
+            {% elif num > page.number|add:'-3' and num < page.number|add:'3' %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+        {% if page.has_next %}
+        <li class="page-item">
+          <a href="?page={{ page.next_page_number }}" class="page-link">następna</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a href="#" class="page-link">następna</a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+</div>
+{% endblock %}

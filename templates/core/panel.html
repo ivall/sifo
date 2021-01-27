@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="panel">
+    <table class="table panel-videos">
+    <h5>Oczekujące filmy</h5>
+      <thead>
+        <tr>
+          <th scope="col">Tytuł</th>
+          <th scope="col">Opis</th>
+          <th scope="col">Zdjęcie</th>
+          <th scope="col">Typ</th>
+          <th scope="col">Rok produkcji</th>
+          <th scope="col">Kategorie</th>
+          <th scope="col">Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for video in videos %}
+      <form action="/video_action/" method="POST" class="form-group">
+        {% csrf_token %}
+        <input type="hidden" value="{{ video.id }}" name="video_id">
+        <tr>
+          <td class="form-group"><input type="text" name="video_name" id="video_name" class="form-control" value="{{ video.name }}" required></td>
+          <td class="form-group"><textarea type="text" name="video_description" class="form-control" required>{{ video.description }}</textarea></td>
+          <td class="form-group"><input type="url" name="video_image" value="{{ video.image }}" class="form-control" required></td>
+          <td class="form-group">
+            <select name="video_type" class="form-control" required>
+              <option value="Series" {% if video.type == "series" %}selected{% endif %}>Serial</option>
+              <option value="Movie" {% if video.type == "movie" %}selected{% endif %}>Film</option>
+            </select>
+          </td>
+          <td>{{ video.categories.values.0.name }}</td>
+          <td>
+              {% for category in video.categories.all %}
+                {% if category.type == 'category' %}
+                    <span class="badge badge-primary">{{ category.name }}</span>
+                {% endif %}
+              {% endfor %}
+          </td>
+          <td>
+            <button type="submit" name="action" value="Odrzuć" class="btn btn-danger">Odrzuć</button>
+            <button type="submit" name="action" value="Zaakceptuj" class="btn btn-success">Zaakceptuj</button>
+          </td>
+        </tr>
+      </form>
+      {% endfor %}
+      </tbody>
+    </table>
+    <table class="table panel-links">
+    <h5>Oczekujące linki</h5>
+      <thead>
+        <tr>
+          <th scope="col">Tytuł</th>
+          <th scope="col">Serwis</th>
+          <th scope="col">Link</th>
+          <th scope="col">Język</th>
+          <th scope="col">Jakość</th>
+          <th scope="col">Sezon</th>
+          <th scope="col">Odcinek</th>
+          <th scope="col">Akcje</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for link in links %}
+      <form action="/link_action/" method="POST" class="form-group">
+        {% csrf_token %}
+        <input type="hidden" value="{{ link.id }}" name="link_id">
+        <tr>
+          <td>{{ link.video.name }}</td>
+          <td class="form-group"><input type="text" name="link_service" id="link_service" class="form-control" value="{{ link.service }}" required></td>
+          <td class="form-group"><input type="url" name="link_link" id="link_link" class="form-control" value="{{ link.url }}" required></td>
+          <td>{{ link.language.name }}</td>
+          <td>{{ link.quality }}</td>
+          {% if link.episode %}<td>{{ link.episode.season }}</td>
+          <td>{{ link.episode.episode }}</td>{% endif %}
+          <td>
+            <button type="submit" name="action" value="Odrzuć" class="btn btn-danger">Odrzuć</button>
+            <button type="submit" name="action" value="Zaakceptuj" class="btn btn-success">Zaakceptuj</button>
+          </td>
+        </tr>
+      </form>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% endblock %}

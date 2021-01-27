@@ -1,0 +1,19 @@
+<div class="video d-flex card card-body flex-row mt-3">
+    <img src="{{ video.image }}" class="video-image">
+    <div class="video-content">
+        <h3 class="ml-2">{{ video.name }} ({{ video.categories.all.values.0.name }})</h3>
+        <div class="categories ml-2">
+            {% for category in video.categories.all %}
+                {% if category.type == 'category' %}
+                    <a href="/category/{{ category.name }}" class="badge badge-primary">{{ category.name }}</a>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="description ml-2">
+            {{ video.description }}
+        </div>
+        <div class="watch-button">
+            <a href="/video/{{ video.id }}" class="btn btn-primary stretched-link">Oglądaj</a>
+        </div>
+    </div>
+</div>
